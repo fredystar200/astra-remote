@@ -1,122 +1,174 @@
-# Astra
+# Astra Remote
 
-A desktop music player for people who still have a music library. <a href="https://repology.org/project/astra-music/versions">
-    <img src="https://repology.org/badge/vertical-allrepos/astra-music.svg" alt="Packaging status" align="right">
-</a>
+> A beautiful mobile web remote for the [Astra](https://github.com/Boof2015/astra) music player.
 
-![code size](https://img.shields.io/github/languages/code-size/Boof2015/astra)
-![GitHub Release](https://img.shields.io/github/v/release/Boof2015/astra?include_prereleases)
-![GitHub License](https://img.shields.io/github/license/Boof2015/astra)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Boof2015/astra/main.yml)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/boof2015/astra/total)
-![WinGet Package Version](https://img.shields.io/winget/v/Boof2015.Astra)
+Control your desktop music library from your phone. Real-time playback state, album art, transport controls — all in a sleek, responsive web UI that matches Astra's aesthetic.
 
+<p align="center">
+  <img src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/Node.js-18+-green?style=flat-square&logo=node.js" alt="Node">
+  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
+</p>
 
-![Astra home screen](assets/Homescreen.png)
+## ✨ Features
 
-Astra plays your local music - FLACs, MP3s, whatever your collection looks like. It has a native C++ DSP engine, real-time visualizers, a parametric EQ, Dolby Atmos decoding, and a UI that adapts to your music. No telemetry, no accounts, no streaming.
+- **Real-time playback** — live track info, album art, and progress via Server-Sent Events
+- **Transport controls** — play, pause, next, previous, and favorite toggle
+- **Auto-connect** — saves your config and reconnects on next visit
+- **Dynamic theming** — accent color matches Astra's visualizer line color
+- **Responsive design** — works on phones, tablets, and desktops
+- **One-tap disconnect** — quick logout from the header to switch connections
+- **Standalone binary** — no Node.js required, just double-click and go
 
-## Playback
+## 🚀 Quick Start
 
-Gapless playback with pre-buffering so albums flow the way they were intended. Supports MP3, FLAC, WAV, OGG, AAC, M4A, OPUS, WMA, and AIFF natively, with an FFmpeg fallback for anything else. Dolby Atmos multichannel decoding works without Atmos-compatible hardware.
+### Option A: Standalone Binary (No Dependencies)
 
-## Visualizers
+1. Download `astra-remote.exe` from the [Releases](https://github.com/YOUR_USERNAME/astra-remote/releases) page
+2. Double-click to run — it starts immediately
+3. Skip to **[Connect from Your Phone](#3-connect-from-your-phone)**
 
-Seven real-time visualizers powered by a native C++ module - oscilloscope, spectrum analyzer, vectorscope, and more. The entire scope rack is customizable: pick your scopes, drag and resize them into any layout, and save presets. The analysis path runs independently from output routing, so scopes always reflect the source material.
-
-## Equalizer
-
-A fully parametric EQ with up to 10 bands, a live frequency response graph with spectrum overlay, and built-in presets. Save your own, or import AutoEQ headphone calibration profiles directly.
-
-![Astra equalizer](assets/EQ.png)
-
-## Library
-
-Point Astra at your music folders and it handles metadata extraction, album artwork, and a searchable library you can browse by artist, album, or track. Favorites and recently played are tracked automatically, and the built-in metadata editor lets you fix tags without leaving the player. A Quick Launch shortcut gets you anywhere without touching the mouse.
-
-## Audio Settings
-
-Output device selection, loudness normalization, per-channel remapping for multichannel setups, and delay calibration for wireless or Bluetooth speakers.
-
-## Interface
-
-Fullscreen mode shows album art with an ambient spectrum backdrop.
-
-![Astra fullscreen mode](assets/Fullscreen.png)
-
-The mini player keeps controls accessible when you want Astra out of the way.
-
-![Astra mini player](assets/Miniplayer.png)
-
-There's also synced lyrics with auto-scroll, pulled automatically from embedded lyrics, an .lrc file, or from LRCLIB.
-
-![Astra lyrics](assets/Lyrics.png)
-
-## Integrations
-
-Everything that touches the network is optional and off by default.
-
-- **Discord Rich Presence** - show what you're listening to with cover art
-- **Last.fm** - automatic scrobbling
-- **Jellyfin & Navidrome** - browse and play your self-hosted media server library directly inside Astra
-
-## Astra API
-
-An optional local REST API lets external tools read the current track, playback position, and cover art, or control playback. Loopback only, bearer token auth, disabled by default. See the [API docs](https://github.com/Boof2015/astra/wiki/Astra-API) for details.
-
-## Download
-
-Prebuilt binaries for Windows, macOS, and Linux are available on the [Releases](https://github.com/Boof2015/astra/releases) page.
-
-Also available on the [AUR](https://aur.archlinux.org/packages/astra-music-bin) (`astra-music-bin`).
-
-## Building from Source
-
-**Prerequisites:** Node.js 18+, npm, and a C++ compiler toolchain.
-
-| Platform | Toolchain |
-|----------|-----------|
-| macOS | Xcode Command Line Tools |
-| Windows | Visual Studio Build Tools |
-| Linux | `build-essential`, `python3`, `libasound2-dev` |
+### Option B: From Source
 
 ```bash
-git clone https://github.com/Boof2015/astra.git
-cd astra
+git clone https://github.com/YOUR_USERNAME/astra-remote.git
+cd astra-remote
 npm install
+npm start
 ```
 
-The `postinstall` script compiles the native C++ visualizer module for your platform.
+### 1. Enable the API in Astra
+
+1. Open Astra → **Settings** → **Integrations** → **Local API**
+2. Toggle **Local Integration API** on
+3. Toggle **External Playback Controls** on
+4. Note the **Endpoint URL** (default: `http://127.0.0.1:38401`) and **API Key**
+
+### 2. Start the Bridge Server
+
+If using the standalone binary, it's already running. If using `npm start`, the server runs on port **38402**.
+
+### 3. Connect from Your Phone
+
+1. Find your PC's local IP address:
+   - **Windows:** `ipconfig` → look for IPv4 (e.g. `192.168.1.x`)
+   - **macOS/Linux:** `ip addr` or `ifconfig`
+
+2. Open Safari/Chrome on your phone and navigate to:
+   ```
+   http://<your-pc-ip>:38402
+   ```
+
+3. Enter the Astra API URL and API key, then tap **Connect**
+
+4. Your config is saved automatically — next time just open the URL and it reconnects.
+
+## 🔒 Firewall Note
+
+On first launch, Windows Firewall may prompt you to allow network access. **Allow it** so your phone can reach the server.
+
+If no prompt appears and you can't connect from your phone, manually add an inbound rule for port `38402` (TCP) in Windows Defender Firewall.
+
+## 📱 Usage
+
+### Player Screen
+
+| Control | Action |
+|---------|--------|
+| ▶️ Play / ⏸ Pause | Toggle playback |
+| ⏮ Previous | Skip to previous track |
+| ⏭ Next | Skip to next track |
+| ♡ Favorite | Toggle favorite for current track |
+| ↩ Logout | Disconnect and return to setup |
+| ⚙️ Settings | Change API URL or key |
+
+### Settings Screen
+
+- Update the **Astra API URL** if you changed the port in Astra
+- Update the **API Key** if you regenerated it
+- Tap **Save & Reconnect** to apply changes
+- Tap **Disconnect** to clear saved credentials
+
+### Connection Status
+
+- 🟢 **Green pulse** — connected and receiving live updates
+- 🔴 **Red dot** — disconnected (Astra may be closed or API disabled)
+
+## 🏗 Project Structure
+
+```
+astra-remote/
+├── public/
+│   ├── index.html      # Web UI
+│   ├── style.css       # Styles (glassmorphism, responsive)
+│   └── app.js          # Frontend logic (SSE, controls)
+├── server.js           # Express bridge server (proxy + static)
+├── package.json
+├── .gitignore
+└── astra-config.json   # Saved config (auto-generated, gitignored)
+```
+
+## 📦 Building the Standalone Binary
+
+Requires Node.js and npm installed for the build step only.
 
 ```bash
-npm run dev              # Development
-npm run build            # Build application assets
-npm run dist             # Package for current platform
-npm run dist:mac         # macOS (DMG + ZIP)
-npm run dist:win         # Windows (NSIS + Portable)
-npm run dist:linux       # Linux (AppImage + DEB)
+npm install
+npm run build        # All platforms
+npm run build:win    # Windows only
+npm run build:mac    # macOS only
+npm run build:linux  # Linux only
 ```
 
-## Documentation
+Binaries output to the `dist/` folder.
 
-For detailed technical documentation, see the [Wiki](https://github.com/Boof2015/astra/wiki).
+## ⚙️ Configuration
 
-## Support
+### Custom Port
 
-If you find Astra useful and want to support a broke college student, consider supporting development:
+**Standalone binary:**
+```bash
+# Windows (PowerShell)
+$env:PORT = "8080"; .\astra-remote.exe
 
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-ff5e5b?logo=ko-fi&logoColor=white)](https://ko-fi.com/boof2015)
+# Linux/macOS
+PORT=8080 ./astra-remote
+```
 
-## License
+**From source:**
+```bash
+# Linux/macOS
+PORT=8080 npm start
 
-This project is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html). See [LICENSE](LICENSE) for the full text.
+# Windows (PowerShell)
+$env:PORT = "8080"; npm start
+```
 
-## Star History
+### Saved Config
 
-<a href="https://www.star-history.com/#Boof2015/astra&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Boof2015/astra&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Boof2015/astra&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Boof2015/astra&type=date&legend=top-left" />
- </picture>
-</a>
+Credentials are stored in `astra-config.json` next to the binary or project root. This file is gitignored. Deleting it resets the connection state.
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Server | Node.js + Express |
+| Packaging | pkg (standalone binary) |
+| Real-time | Server-Sent Events (SSE) |
+| Frontend | Vanilla JS + CSS |
+| Proxy | Express reverse proxy to Astra API |
+
+## 📋 Requirements
+
+- **Astra** 0.5+ with Local API enabled
+- Same Wi-Fi network between PC and phone
+- **Node.js 18+** only if running from source or building the binary
+
+## 🔗 Related
+
+- [Astra Music Player](https://github.com/Boof2015/astra) — the desktop player this remote controls
+- [Astra API Docs](https://github.com/Boof2015/astra/wiki/Astra-API) — full API reference
+
+## 📄 License
+
+[GPL-3.0](LICENSE)
