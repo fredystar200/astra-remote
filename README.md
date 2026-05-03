@@ -1,6 +1,6 @@
 # Astra Remote
 
-> A beautiful mobile web remote for the [Astra](https://github.com/Boof2015/astra) music player.
+> A beautiful web remote for the [Astra](https://github.com/Boof2015/astra) music player.
 
 Control your desktop music library from your phone. Real-time playback state, album art, transport controls, all in a sleek, responsive web UI that matches Astra's aesthetic.
 
