@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#050508">
+  <title>Astra Remote</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="bg-blur"></div>
+
+    <div id="setup-screen" class="screen">
+      <div class="setup-container">
+        <div class="setup-glass">
+          <div class="logo">
+            <svg viewBox="0 0 80 80" fill="none">
+              <defs>
+                <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#38bdf8"/>
+                  <stop offset="100%" style="stop-color:#818cf8"/>
+                </linearGradient>
+              </defs>
+              <circle cx="40" cy="40" r="36" stroke="url(#logoGrad)" stroke-width="2.5"/>
+              <circle cx="40" cy="40" r="20" fill="url(#logoGrad)" opacity="0.15"/>
+              <circle cx="40" cy="40" r="10" fill="url(#logoGrad)" opacity="0.3"/>
+              <circle cx="40" cy="40" r="5" fill="url(#logoGrad)"/>
+              <circle cx="40" cy="40" r="36" stroke="url(#logoGrad)" stroke-width="1" opacity="0.4" stroke-dasharray="4 8"/>
+            </svg>
+          </div>
+          <h1>Astra Remote</h1>
+          <p class="subtitle">Your music, controlled from anywhere</p>
+
+          <form id="setup-form">
+            <div class="input-group">
+              <label for="astra-url">Astra API URL</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                <input type="text" id="astra-url" placeholder="http://127.0.0.1:38401" value="http://127.0.0.1:38401">
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="astra-token">API Key</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <input type="password" id="astra-token" placeholder="Paste your API key here">
+                <button type="button" class="toggle-vis" onclick="togglePassword()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary">
+              <span>Connect</span>
+              <div class="btn-shimmer"></div>
+            </button>
+          </form>
+
+          <div class="setup-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 16v-4M12 8h.01"/>
+            </svg>
+            <span>Enable in Astra: Settings → Integrations → Local API</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="player-screen" class="screen hidden">
+      <header class="player-header">
+        <div class="header-left">
+          <div class="pulse-dot" id="pulse-dot"></div>
+          <span class="status-text" id="status-text">Disconnected</span>
+        </div>
+        <div class="header-actions">
+          <button id="logout-btn" class="icon-btn logout-btn" aria-label="Disconnect">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+          </button>
+          <button id="settings-btn" class="icon-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="player-main">
+        <div class="artwork-wrapper">
+          <div class="artwork-container">
+            <img id="artwork" src="" alt="Album Art">
+            <div id="artwork-placeholder" class="artwork-placeholder">
+              <svg viewBox="0 0 80 80" fill="none">
+                <defs>
+                  <linearGradient id="phGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#38bdf8"/>
+                    <stop offset="100%" style="stop-color:#818cf8"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="40" cy="40" r="30" stroke="url(#phGrad)" stroke-width="1.5" opacity="0.4"/>
+                <circle cx="40" cy="40" r="12" fill="url(#phGrad)" opacity="0.2"/>
+                <circle cx="40" cy="40" r="4" fill="url(#phGrad)" opacity="0.5"/>
+              </svg>
+            </div>
+          </div>
+          <div class="vinyl-ring"></div>
+        </div>
+
+        <div class="track-info">
+          <div class="track-info-inner">
+            <h2 id="track-title" class="marquee">No track playing</h2>
+          </div>
+          <p id="track-artist">Connect to Astra to begin</p>
+          <p id="track-album" class="album-text"></p>
+        </div>
+
+        <div class="progress-section">
+          <div class="progress-bar-container" id="progress-container">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill">
+                <div class="progress-glow"></div>
+              </div>
+              <div class="progress-thumb" id="progress-thumb"></div>
+            </div>
+          </div>
+          <div class="time-display">
+            <span id="current-time">0:00</span>
+            <span id="duration">0:00</span>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button class="control-btn secondary" id="prev-btn" aria-label="Previous">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+            </svg>
+          </button>
+          <button class="control-btn primary" id="play-btn" aria-label="Play">
+            <div class="play-btn-inner">
+              <svg viewBox="0 0 24 24" fill="currentColor" id="play-icon">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" id="pause-icon" class="hidden">
+                <rect x="6" y="4" width="4" height="16" rx="1"/>
+                <rect x="14" y="4" width="4" height="16" rx="1"/>
+              </svg>
+            </div>
+          </button>
+          <button class="control-btn secondary" id="next-btn" aria-label="Next">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="extra-controls">
+          <button class="control-btn favorite-btn" id="favorite-btn" aria-label="Toggle favorite">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" id="fav-icon">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" id="fav-filled" class="hidden">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </button>
+          <div class="queue-info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 18V5l12-2v13"/>
+              <circle cx="6" cy="18" r="3"/>
+              <circle cx="18" cy="16" r="3"/>
+            </svg>
+            <span id="queue-length">--</span>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="settings-screen" class="screen hidden">
+      <header class="settings-header">
+        <button id="back-btn" class="icon-btn back-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <h1>Settings</h1>
+        <div class="spacer"></div>
+      </header>
+
+      <main class="settings-main">
+        <div class="settings-card">
+          <div class="card-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            <div>
+              <h3>Connection</h3>
+              <p>Configure your Astra API connection</p>
+            </div>
+          </div>
+
+          <form id="settings-form">
+            <div class="input-group">
+              <label for="settings-url">Astra API URL</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                <input type="text" id="settings-url" placeholder="http://127.0.0.1:38401">
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="settings-token">API Key</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <input type="password" id="settings-token" placeholder="Paste your API key here">
+                <button type="button" class="toggle-vis" onclick="toggleSettingsPassword()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary">
+              <span>Save & Reconnect</span>
+              <div class="btn-shimmer"></div>
+            </button>
+          </form>
+        </div>
+
+        <button id="disconnect-btn" class="btn-danger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+          </svg>
+          <span>Disconnect</span>
+        </button>
+
+        <div class="settings-info">
+          <p>Astra Remote v1.0</p>
+          <p class="muted">Local bridge server for Astra Music Player</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
