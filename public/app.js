@@ -4,6 +4,7 @@ const state = {
   progressInterval: null,
   eventSource: null,
   lastUpdateAt: 0,
+  currentArtUrl: '',
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -39,12 +40,11 @@ function formatTime(seconds) {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
-function updateUI(data) {
+function updateTrackInfo(data) {
   if (!data || !data.currentTrack) {
     $('#track-title').textContent = 'No track playing';
     $('#track-artist').textContent = '';
     $('#track-album').textContent = '';
-    $('#artwork').classList.remove('visible');
     $('#queue-length').textContent = '--';
     return;
   }
@@ -54,28 +54,37 @@ function updateUI(data) {
   $('#track-artist').textContent = track.artist || 'Unknown Artist';
   $('#track-album').textContent = track.album || '';
 
-  if (track.artworkUrl) {
-    const artUrl = track.artworkUrl.replace(/http:\/\/[^\/]+/, '');
-    $('#artwork').src = `/api/proxy${artUrl}`;
-    $('#artwork').classList.add('visible');
-  } else {
-    $('#artwork').classList.remove('visible');
-  }
-
   if (data.queueLength) {
     $('#queue-length').textContent = data.queueLength;
   }
 
-  updateProgress(data);
-  updatePlayButton(data.playbackState);
-  updateFavorite(track.isFavorite);
-
   if (data.visualizerLineColor) {
     document.documentElement.style.setProperty('--accent', data.visualizerLineColor);
   }
+}
 
-  state.nowPlaying = data;
-  state.lastUpdateAt = Date.now();
+function updateArtwork(track) {
+  if (!track || !track.artworkUrl) {
+    state.currentArtUrl = '';
+    const img = $('#artwork');
+    img.classList.remove('visible');
+    img.src = '';
+    return;
+  }
+
+  const artUrl = track.artworkUrl.replace(/http:\/\/[^\/]+/, '');
+  if (state.currentArtUrl === artUrl) return;
+  state.currentArtUrl = artUrl;
+
+  const proxyUrl = `/api/proxy${artUrl}&_t=${Date.now()}`;
+  const img = $('#artwork');
+
+  const preloader = new Image();
+  preloader.onload = () => {
+    img.src = proxyUrl;
+    img.classList.add('visible');
+  };
+  preloader.src = proxyUrl;
 }
 
 function updateProgress(data) {
@@ -114,6 +123,24 @@ function startProgressTimer() {
       updateProgress(state.nowPlaying);
     }
   }, 250);
+}
+
+function updateUI(data) {
+  if (!data || !data.currentTrack) {
+    updateTrackInfo(null);
+    $('#artwork').classList.remove('visible');
+    $('#queue-length').textContent = '--';
+    return;
+  }
+
+  state.nowPlaying = data;
+  state.lastUpdateAt = Date.now();
+
+  updateTrackInfo(data);
+  updateArtwork(data.currentTrack);
+  updateProgress(data);
+  updatePlayButton(data.playbackState);
+  updateFavorite(data.currentTrack.isFavorite);
 }
 
 async function sendControl(command) {
@@ -252,7 +279,15 @@ async function doDisconnect() {
 }
 
 $('#play-btn').addEventListener('click', () => {
-  sendControl(state.nowPlaying?.playbackState === 'playing' ? 'pause' : 'play');
+  const isPlaying = state.nowPlaying?.playbackState === 'playing';
+  const newCommand = isPlaying ? 'pause' : 'play';
+  sendControl(newCommand);
+
+  if (state.nowPlaying) {
+    state.nowPlaying.playbackState = isPlaying ? 'paused' : 'playing';
+    state.lastUpdateAt = Date.now();
+    updatePlayButton(state.nowPlaying.playbackState);
+  }
 });
 
 $('#prev-btn').addEventListener('click', () => sendControl('previous'));

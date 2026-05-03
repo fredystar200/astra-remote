@@ -355,9 +355,11 @@ body {
   transform: scale(0.9);
 }
 
-.icon-btn svg {
+.icon-btn svg,
+.control-btn svg {
   width: 20px;
   height: 20px;
+  pointer-events: none;
 }
 
 .player-main {
@@ -582,6 +584,9 @@ body {
   background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
   border-radius: 50%;
   box-shadow: 0 8px 24px var(--accent-glow);
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .control-btn.primary:active {
@@ -589,10 +594,18 @@ body {
   box-shadow: 0 4px 16px var(--accent-glow);
 }
 
+.control-btn.primary svg {
+  width: 28px;
+  height: 28px;
+  color: var(--bg-primary);
+  pointer-events: none;
+}
+
 .play-btn-inner svg {
   width: 28px;
   height: 28px;
   color: var(--bg-primary);
+  pointer-events: none;
 }
 
 /* Extra Controls */
@@ -806,7 +819,14 @@ body {
     height: 72px;
   }
 
-  .play-btn-inner svg {
+.play-btn-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.play-btn-inner svg {
     width: 32px;
     height: 32px;
   }

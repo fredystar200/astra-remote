@@ -88,8 +88,7 @@ app.all('/api/proxy/*', async (req, res) => {
     return res.status(401).json({ error: 'Not configured' });
   }
 
-  const targetPath = req.path.replace('/api/proxy', '');
-  const targetUrl = `${global.astraConfig.astraUrl.replace(/\/$/, '')}${targetPath}`;
+  const targetUrl = `${global.astraConfig.astraUrl.replace(/\/$/, '')}${req.url.replace('/api/proxy', '')}`;
 
   try {
     const fetchOptions = {
@@ -110,6 +109,7 @@ app.all('/api/proxy/*', async (req, res) => {
     if (contentType.includes('image')) {
       const buffer = await response.arrayBuffer();
       res.set('Content-Type', contentType);
+      res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
       res.send(Buffer.from(buffer));
       return;
     }
