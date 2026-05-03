@@ -10,6 +10,25 @@ Control your desktop music library from your phone. Real-time playback state, al
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
 </p>
 
+## ✨ Screenshots
+<table align="center">
+  <tr>
+    <th>📱 Mobile Experience</th>
+    <th>💻 Desktop Experience</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="assets/phone.png" width="220"/><br/>
+      <sub>Yay</sub>
+    </td>
+    <td align="center">
+      <img src="assets/computer.png" width="500"/><br/>
+      <sub>Let's goooo</sub>
+    </td>
+  </tr>
+</table>
+
+
 ## ✨ Features
 
 - **Real-time playback** — live track info, album art, and progress via Server-Sent Events
