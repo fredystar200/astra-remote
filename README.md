@@ -41,13 +41,13 @@ Control your desktop music library from your phone. Real-time playback state, al
 
 ## 🚀 Quick Start
 
-### Option A: Standalone Binary (No Dependencies)
+### Option A: Standalone Binary (No Dependencies - Windows)
 
 1. Download `astra-remote.exe` from the [Releases](https://github.com/YOUR_USERNAME/astra-remote/releases) page
 2. Double-click to run — it starts immediately
 3. Skip to **[Connect from Your Phone](#3-connect-from-your-phone)**
 
-### Option B: From Source
+### Option B: From Source (Windows - MacOS - Linux)
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/astra-remote.git
