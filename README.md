@@ -1,5 +1,5 @@
 # Astra Remote
-
+**EDIT:** PWA phone controller has been added to the main repository as an experimental feature by the Boof2015 who is the app author so check it out. This one still working.
 > A beautiful web remote for the [Astra](https://github.com/Boof2015/astra) music player.
 
 Control your desktop music library from your phone or from an another device. Real-time playback state, album art, transport controls, all in a sleek, responsive web UI that matches Astra's aesthetic.
